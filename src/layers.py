@@ -20,6 +20,11 @@ class Dense():
         self.inputs = np.array(inputs)
         self.outputs = self.inputs @ self.weights.T + self.biases
 
+    def backward(self, dvalues: list) -> None:
+        self.dweights = dvalues.T @ self.inputs  # Gradient of weights
+        self.dbiases = np.sum(dvalues, axis=0)  # Gradient of biases
+        self.dinputs = dvalues @ self.weights  # Gradient of inputs
+
     def info(self) -> None:
         print(f"Inputs:\n{self.inputs}\n")
         print(f"Weights:\n{self.weights}\n")
@@ -38,6 +43,10 @@ class ReLU():
         self.inputs = np.array(inputs)
         self.outputs = np.maximum(0, self.inputs)
 
+    def backward(self, dvalues: list) -> None:
+        self.dinputs = dvalues.copy()
+        self.dinputs[self.inputs <= 0] = 0  # Gradient of inputs
+
     def info(self) -> None:
         print(f"Inputs:\n{self.inputs}\n")
         print(f"Outputs:\n{self.outputs}\n")
@@ -53,6 +62,14 @@ class Softmax():
     def forward(self, inputs: list) -> None:
         self.inputs = np.array(inputs)
         self.outputs = np.exp(self.inputs) / np.sum(np.exp(self.inputs))
+
+    def backward(self, dvalues: list) -> None:
+        self.dinputs = np.empty_like(dvalues)
+
+        for i, (single_output, single_dvalues) in enumerate(zip(self.outputs, dvalues)):
+            single_output = single_output.reshape(-1, 1)
+            jacobian_matrix = np.diagflat(single_output) - np.dot(single_output, single_output.T)
+            self.dinputs[i] = np.dot(jacobian_matrix, single_dvalues)
 
     def info(self) -> None:
         print(f"Inputs:\n{self.inputs}\n")

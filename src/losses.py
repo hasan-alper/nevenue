@@ -17,6 +17,12 @@ class CategoricalCrossentropy():
 
         return loss_avg
 
+    def backward(self, dvalues: list, y_true: list) -> None:
+        n_samples = len(dvalues)
+
+        self.dinputs = -y_true / dvalues  # Gradient of inputs
+        self.dinputs = self.dinputs / n_samples  # Average gradient of inputs
+
 
 class SparseCategoricalCrossentropy():
     """
@@ -33,3 +39,13 @@ class SparseCategoricalCrossentropy():
         loss_avg = np.mean(loss)
 
         return loss_avg
+
+    def backward(self, dvalues: list, y_true: list) -> None:
+        n_samples = len(dvalues)
+        n_labels = len(dvalues[0])
+
+        if len(y_true.shape) == 1:
+            y_true = np.eye(n_labels)[y_true]  # One-hot encode labels
+
+        self.dinputs = -y_true / dvalues  # Gradient of inputs
+        self.dinputs = self.dinputs / n_samples  # Average gradient of inputs
