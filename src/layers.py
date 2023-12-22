@@ -61,7 +61,9 @@ class Softmax():
 
     def forward(self, inputs: list) -> None:
         self.inputs = np.array(inputs)
-        self.outputs = np.exp(self.inputs) / np.sum(np.exp(self.inputs))
+        exp_values = np.exp(self.inputs - np.max(self.inputs, axis=1, keepdims=True))
+        probabilities = exp_values / np.sum(exp_values, axis=1, keepdims=True)
+        self.outputs = probabilities
 
     def backward(self, dvalues: list) -> None:
         self.dinputs = np.empty_like(dvalues)
