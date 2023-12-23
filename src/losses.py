@@ -6,7 +6,7 @@ class Loss():
     Base class for loss function classes.
     """
 
-    def regularization_loss(self, layer):
+    def regularization_loss(self, layer) -> float:
         """
         Calculates the regularization loss from all the layer's weights and biases.
         """

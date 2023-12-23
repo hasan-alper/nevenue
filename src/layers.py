@@ -50,6 +50,28 @@ class Dense():
         print(f"Outputs:\n{self.outputs}\n")
 
 
+class Dropout():
+    """
+    Dropout layer class.
+
+    Dropout is a regularization technique that randomly sets a fraction of the input units to 0 at each training step.
+
+    Params:
+        rate (float): Fraction of the input units to drop.
+    """
+
+    def __init__(self, rate: float) -> None:
+        self.rate = 1 - rate
+
+    def forward(self, inputs: list) -> None:
+        self.inputs = np.array(inputs)
+        self.binary_mask = np.random.binomial(1, self.rate, size=self.inputs.shape) / self.rate
+        self.outputs = self.inputs * self.binary_mask
+
+    def backward(self, dvalues: list) -> None:
+        self.dinputs = dvalues * self.binary_mask  # Gradient of inputs
+
+
 class ReLU():
     """
     Rectified Linear Unit activation layer class.
