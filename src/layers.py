@@ -10,11 +10,19 @@ class Dense():
     Params:
         n_neurons (int): Number of neurons in the layer.
         n_inputs (int): Length of the data sample.
+        l1_w (float): L1 regularization parameter for weights.
+        l1_b (float): L1 regularization parameter for biases.
+        l2_w (float): L2 regularization parameter for weights.
+        l2_b (float): L2 regularization parameter for biases.
     """
 
-    def __init__(self, n_neurons: int, n_inputs: int) -> None:
+    def __init__(self, n_neurons: int, n_inputs: int, l1_w: float = 0, l1_b: float = 0, l2_w: float = 0, l2_b: float = 0) -> None:
         self.weights = 0.1 * np.random.randn(n_neurons, n_inputs)
         self.biases = np.zeros(n_neurons)
+        self.l1_w = l1_w
+        self.l1_b = l1_b
+        self.l2_w = l2_w
+        self.l2_b = l2_b
 
     def forward(self, inputs: list) -> None:
         self.inputs = np.array(inputs)
@@ -23,6 +31,16 @@ class Dense():
     def backward(self, dvalues: list) -> None:
         self.dweights = dvalues.T @ self.inputs  # Gradient of weights
         self.dbiases = np.sum(dvalues, axis=0)  # Gradient of biases
+
+        if self.l1_w:
+            self.dweights += self.l1_w * np.sign(self.weights)  # L1 regularization gradient of weights
+        if self.l1_b:
+            self.dbiases += 2 * self.l1_b * np.sign(self.biases)  # L1 regularization gradient of biases
+        if self.l2_w:
+            self.dweights += self.l2_w * self.weights  # L2 regularization gradient of weights
+        if self.l2_b:
+            self.dbiases += 2 * self.l2_b * self.biases  # L2 regularization gradient of biases
+
         self.dinputs = dvalues @ self.weights  # Gradient of inputs
 
     def info(self) -> None:

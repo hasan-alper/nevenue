@@ -1,7 +1,33 @@
 import numpy as np
 
 
-class CategoricalCrossentropy():
+class Loss():
+    """
+    Base class for loss function classes.
+    """
+
+    def regularization_loss(self, layer):
+        """
+        Calculates the regularization loss from all the layer's weights and biases.
+        """
+        regularization_loss = 0
+
+        if layer.l1_w:
+            regularization_loss += layer.l1_w * np.sum(np.abs(layer.weights))
+
+        if layer.l1_b:
+            regularization_loss += layer.l1_b * np.sum(np.abs(layer.biases))
+
+        if layer.l2_w:
+            regularization_loss += layer.l2_w * np.sum(layer.weights * layer.weights)
+
+        if layer.l2_b:
+            regularization_loss += layer.l2_b * np.sum(layer.biases * layer.biases)
+
+        return regularization_loss
+
+
+class CategoricalCrossentropy(Loss):
     """
     Computes the crossentropy loss between the labels and predictions.
 
@@ -24,7 +50,7 @@ class CategoricalCrossentropy():
         self.dinputs = self.dinputs / n_samples  # Average gradient of inputs
 
 
-class SparseCategoricalCrossentropy():
+class SparseCategoricalCrossentropy(Loss):
     """
     Computes the crossentropy loss between the labels and predictions.
 
