@@ -135,3 +135,22 @@ class Sigmoid():
     def info(self) -> None:
         print(f"Inputs:\n{self.inputs}\n")
         print(f"Outputs:\n{self.outputs}\n")
+
+
+class Linear():
+    """
+    Linear activation layer class.
+
+    It returns element-wise `x`.
+    """
+
+    def forward(self, inputs: list) -> None:
+        self.inputs = np.array(inputs)
+        self.outputs = self.inputs
+
+    def backward(self, dvalues: list) -> None:
+        self.dinputs = dvalues.copy()  # Gradient of inputs
+
+    def info(self) -> None:
+        print(f"Inputs:\n{self.inputs}\n")
+        print(f"Outputs:\n{self.outputs}\n")

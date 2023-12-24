@@ -35,3 +35,17 @@ def vertical_data(n_samples: int, n_classes: int) -> tuple[list, list]:
         X[ix] = np.c_[np.random.randn(n_samples) * .1 + (class_number) / 3, np.random.randn(n_samples) * .1 + 0.5]
         y[ix] = class_number
     return X, y
+
+
+def sine_data(n_samples: int) -> tuple[list, list]:
+    """
+    Generates a sine dataset.
+
+    Params:
+        n_samples (int): Number of sample points.
+    """
+
+    X = np.arange(n_samples).reshape(-1, 1) / n_samples
+    y = np.sin(2 * np.pi * X).reshape(-1, 1)
+
+    return X, y

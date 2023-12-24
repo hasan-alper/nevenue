@@ -95,3 +95,19 @@ class BinaryCrossentropy(Loss):
 
         self.dinputs = -(y_true / dvalues - (1 - y_true) / (1 - dvalues))  # Gradient of inputs
         self.dinputs = self.dinputs / n_samples  # Average gradient of inputs
+
+
+class MeanSquaredError(Loss):
+    """
+    Computes the mean squared error loss between the labels and predictions.
+    """
+
+    def calculate(self, y_true: list, y_pred: list) -> float:
+        loss = np.mean((y_true - y_pred) ** 2)
+        return loss
+
+    def backward(self, dvalues: list, y_true: list) -> None:
+        n_samples = len(dvalues)
+
+        self.dinputs = -2 * (y_true - dvalues)  # Gradient of inputs
+        self.dinputs = self.dinputs / n_samples  # Average gradient of inputs
