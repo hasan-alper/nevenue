@@ -75,3 +75,23 @@ class SparseCategoricalCrossentropy(Loss):
 
         self.dinputs = -y_true / dvalues  # Gradient of inputs
         self.dinputs = self.dinputs / n_samples  # Average gradient of inputs
+
+
+class BinaryCrossentropy(Loss):
+    """
+    Computes the crossentropy loss between the labels and predictions.
+    """
+
+    def calculate(self, y_true: list, y_pred: list) -> float:
+        y_pred = np.clip(y_pred, 1e-6, 1 - 1e-6)
+
+        loss = -(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
+        loss_avg = np.mean(loss)
+
+        return loss_avg
+
+    def backward(self, dvalues: list, y_true: list) -> None:
+        n_samples = len(dvalues)
+
+        self.dinputs = -(y_true / dvalues - (1 - y_true) / (1 - dvalues))  # Gradient of inputs
+        self.dinputs = self.dinputs / n_samples  # Average gradient of inputs

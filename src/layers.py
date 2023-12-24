@@ -116,3 +116,22 @@ class Softmax():
     def info(self) -> None:
         print(f"Inputs:\n{self.inputs}\n")
         print(f"Outputs:\n{self.outputs}\n")
+
+
+class Sigmoid():
+    """
+    Sigmoid activation layer class.
+
+    It returns element-wise `1 / (1 + exp(-x))`.
+    """
+
+    def forward(self, inputs: list) -> None:
+        self.inputs = np.array(inputs)
+        self.outputs = 1 / (1 + np.exp(-self.inputs))
+
+    def backward(self, dvalues: list) -> None:
+        self.dinputs = dvalues * (1 - self.outputs) * self.outputs  # Gradient of inputs
+
+    def info(self) -> None:
+        print(f"Inputs:\n{self.inputs}\n")
+        print(f"Outputs:\n{self.outputs}\n")
